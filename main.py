@@ -79,9 +79,28 @@ def jugada(bolillero):
     return bolilla
 
 
-def juego():
-    partida_terminada:bool = False
-    while not partida_terminada:
+def mensaje_de_ayuda(cantidad_de_cartones: list ):
+    if len(cantidad_de_cartones) == 1:
+        print(Fore.GREEN + '''
+COMANDOS: 
+ingrese 1, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 153) 
+m para ver tableros de la maquina, j para ver tableros del jugador,"
+linea + carton para cantar linea,
+bingo + carton para cantar bingo,
+enter para continuar''' + Style.RESET_ALL)
+    else:
+        print(Fore.GREEN + f'''
+COMANDOS:
+ingrese un numero del 1 al {len(cantidad_de_cartones)}, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 392)
+m para ver tableros de la maquina, j para ver tableros del jugador,"
+linea + carton para cantar linea,
+bingo + carton para cantar bingo,
+enter para continuar''' + Style.RESET_ALL)
+    print()
+
+
+def juego(ganancias:dict):
+        ganancias: dict = {'jugador': 0, 'maquina': 0}	
         cls()
         ronda: int = 1
         bolillero = generar_bolillero()
@@ -125,66 +144,170 @@ def juego():
         time.sleep(1)
         print("Comienza el juego!")
         time.sleep(3)
-        cls()
-        if len(cartones_del_jugador) == 1:
-            print(Fore.GREEN + '''
-COMANDOS: 
-ingrese 1, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 153) 
-m para ver tableros de la maquina, j para ver tableros del jugador,"
-linea + carton y fila para cantar linea,
-bingo para cantar bingo,
-enter para continuar''' + Style.RESET_ALL)
-            print()
-        else:
-            print(Fore.GREEN + f'''
-COMANDOS:
-ingrese un numero del 1 al {len(cartones_del_jugador)}, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 392)
-m para ver tableros de la maquina, j para ver tableros del jugador,"
-linea + carton y fila para cantar linea,
-bingo para cantar bingo,
-enter para continuar''' + Style.RESET_ALL)
-            print()
-        print(f"RONDA {ronda}")
-        time.sleep(1)
-        tirada: int = jugada(bolillero)
-        print(f"La bolilla es: {tirada}")
-        for i in range(len(cartones_de_la_maquina)):
-            for j in range(9):
-                for k in range(3):
-                    if cartones_de_la_maquina[i][j][k] == tirada:
-                        cartones_de_la_maquina[i][j][k] = "x"
-        comando: str = input("ingrese un comando: ")
-        while comando != "":
-            if comando.isnumeric():
-                if len(comando) != 3:
-                    print("Comando invalido")
-                    comando: str = input("ingrese un comando: ")
-                else:
-                    carton: int = int(comando[0])
-                    fila: int = int(comando[1])
-                    columna: int = int(comando[2])
-                    if carton > len(cartones_del_jugador) or carton < 1:
-                        print("Comando invalido")
-                        comando: str = input("ingrese un comando: ")
-                    else:
-                        if cartones_del_jugador[carton-1][fila-1][columna-1] == tirada:
-                            cartones_del_jugador[carton-1][fila-1][columna-1] = "x"
-                            comando = input("ingrese un comando: ")
-                        else:
+        partida_terminada:bool = False
+        while not partida_terminada:
+            while ronda % 4 != 0:
+                cls()
+                mensaje_de_ayuda(cartones_del_jugador)
+                print(f"RONDA {ronda}")
+                time.sleep(1)
+                tirada: int = jugada(bolillero)
+                print(f"La bolilla es: {tirada}")
+                cantidad_x_de_la_maquina_por_carton:dict = {}
+                for i in range(len(cartones_de_la_maquina)):
+                    cantidad_x_de_la_maquina_por_carton[i] = 0
+                    for j in range(9):
+                        for k in range(3):
+                            if cartones_de_la_maquina[i][j][k] == tirada:
+                                cartones_de_la_maquina[i][j][k] = "x"
+                                cantidad_x_de_la_maquina_por_carton[i] += 1
+                        if cartones_de_la_maquina[i][j][0] == "x" and cartones_de_la_maquina[i][j][1] == "x" and cartones_de_la_maquina[i][j][2] == "x":
+                            ganancias["maquina"] += 2000
+                    if cantidad_x_de_la_maquina_por_carton[i] == 27:
+                        ganancias["maquina"] += 58000
+                        print("BINGO DE LA MAQUINA!")
+                        time.sleep(3)
+                        partida_terminada = True
+                        return ganancias
+
+                comando: str = input("ingrese un comando: ")
+                while comando != "":
+                    if comando.isnumeric():
+                        if len(comando) != 3:
                             print("Comando invalido")
                             comando: str = input("ingrese un comando: ")
-                    
-            elif comando == "m":
-                print(Fore.BLUE + "CARTONES DE LA MAQUINA")
-                for i in range(len(cartones_de_la_maquina)):
-                    print()
-                    print(f"Carton {i+1}:")
-                    print()
-                    for j in range(9):
-                        print(cartones_de_la_maquina[i][j])
-                print(Style.RESET_ALL)
-                comando: str = input("ingrese un comando: ")
-            elif comando == "j":
+                        else:
+                            carton: int = int(comando[0])
+                            fila: int = int(comando[1])
+                            columna: int = int(comando[2])
+                            if carton > len(cartones_del_jugador) or carton < 1:
+                                print("Comando invalido")
+                                comando: str = input("ingrese un comando: ")
+                            else:
+                                if cartones_del_jugador[carton-1][fila-1][columna-1] == tirada:
+                                    cartones_del_jugador[carton-1][fila-1][columna-1] = "x"
+                                    cls()
+                                    mensaje_de_ayuda(cartones_del_jugador)
+                                    comando = input("ingrese un comando: ")
+                                else:
+                                    print("Comando invalido")
+                                    comando: str = input("ingrese un comando: ")
+                            
+                    elif comando == "m":
+                        cls()
+                        mensaje_de_ayuda(cartones_del_jugador)
+                        print(f"La bolilla es: {tirada}")
+                        print(Fore.BLUE + "CARTONES DE LA MAQUINA")
+                        for i in range(len(cartones_de_la_maquina)):
+                            print()
+                            print(f"Carton {i+1}:")
+                            print()
+                            for j in range(9):
+                                print(cartones_de_la_maquina[i][j])
+                        print(Style.RESET_ALL)
+                        comando: str = input("ingrese un comando: ")
+                    elif comando == "j":
+                        cls()
+                        mensaje_de_ayuda(cartones_del_jugador)
+                        print(f"La bolilla es: {tirada}")
+                        print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
+                        for i in range(len(cartones_del_jugador)):
+                            print()
+                            print()
+                            print(f"Carton {i+1}:")
+                            print()
+                            for j in range(9):
+                                print(cartones_del_jugador[i][j])
+                        print(Style.RESET_ALL)
+                        comando: str = input("ingrese un comando: ")
+                    elif comando.isalnum() and "linea" in comando:
+                        if len(comando) == 6:
+                            carton: int = int(comando[6])
+                            if carton > len(cartones_del_jugador) or carton < 1:
+                                print("Comando invalido")
+                                comando: str = input("ingrese un comando: ")
+                            else:
+                                ganancias["jugador"] += 2000
+                    elif comando.isalnum() and "bingo" in comando:
+                        if len(comando) == 6:
+                            carton: int = int(comando[6])
+                            if carton > len(cartones_del_jugador) or carton < 1:
+                                print("Comando invalido")
+                                comando: str = input("ingrese un comando: ")
+                            else:
+                                cantidad_de_x_carton_jugador: int = 0
+                                for i in range(9):
+                                    for j in range(3):
+                                        if cartones_del_jugador[carton-1][i][j] == "x":
+                                            cantidad_de_x_carton_jugador += 1
+                                if cantidad_de_x_carton_jugador == 27:
+                                    ganancias["jugador"] += 58000
+                                    print("BINGO!")
+                                    time.sleep(3)
+                                    partida_terminada = True
+                                    return ganancias
+                                else:
+                                    print("USTED HIZO TRAMPA!")
+                                    time.sleep(3)
+                                    ganancias["jugador"] = 0
+                                    partida_terminada = True
+                                    return ganancias
+                if comando == "":
+                    ronda += 1
+                    cls()
+            while ronda % 4 == 0:
+                cls()
+                print("RONDA TWEAK")
+                time.sleep(1)
+                print("SE TIRARA UNA MONEDA, BUENA SUERTE!")
+                time.sleep(1)
+                moneda: int = random.randint(1,2)
+                if moneda == 1:
+                    moneda: str = "cara"
+                else:
+                    moneda: str = "seca"
+                
+                if moneda == "cara":
+                    print("Cara!")
+                    time.sleep(1)
+                    print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
+                    for i in range(len(cartones_del_jugador)):
+                        print()
+                        print()
+                        print(f"Carton {i+1}:")
+                        print()
+                        for j in range(9):
+                            print(cartones_del_jugador[i][j])
+                    print(Style.RESET_ALL)
+                    carton_elegido: int = int(input("Elija un carton: "))
+                    while carton_elegido > len(cartones_del_jugador) or carton_elegido < 1:
+                        carton_elegido: int = int(input("Elija un carton: "))
+                    fila_elegida: int = int(input("Elija una fila: "))
+                    while fila_elegida > 9 or fila_elegida < 1:
+                        fila_elegida: int = int(input("Elija una fila: "))
+                    columna_elegida: int = int(input("Elija una columna: "))
+                    while columna_elegida > 3 or columna_elegida < 1:
+                        columna_elegida: int = int(input("Elija una columna: "))
+                    cartones_del_jugador[carton_elegido-1][fila_elegida-1][columna_elegida-1] = "x"
+                    cls()
+                elif moneda == "seca":
+                    print("Seca!")
+                    time.sleep(1)
+                    print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
+                    for i in range(len(cartones_del_jugador)):
+                        print()
+                        print()
+                        print(f"Carton {i+1}:")
+                        print()
+                        for j in range(9):
+                            print(cartones_del_jugador[i][j])
+                    print(Style.RESET_ALL)
+                    carton_elegido: int = int(input("Elija un carton: "))
+                    while carton_elegido > len(cartones_de_la_maquina) or carton_elegido < 1:
+                        carton_elegido: int = int(input("Elija un carton: "))
+                    cartones_del_jugador[carton_elegido-1] = generar_carton()
+                    cls()
+                time.sleep(1)
                 print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
                 for i in range(len(cartones_del_jugador)):
                     print()
@@ -194,18 +317,13 @@ enter para continuar''' + Style.RESET_ALL)
                     for j in range(9):
                         print(cartones_del_jugador[i][j])
                 print(Style.RESET_ALL)
-                comando: str = input("ingrese un comando: ")
-            elif comando == "bingo":
-                pass
-            elif comando == "linea":
-                pass
-
-
-
+                print("presione enter para continuar")
+                msvcrt.getch()
+                ronda += 1
+        
 
 def tabla_de_premios():
     cls()
-
     time.sleep(1)
     print('''
 PREMIOS:
@@ -271,8 +389,7 @@ CONTROLES:''')
     print('''
 1. Para tachar una celda se deberá ingresar el número de la celda que se desea tachar,
    por ejemplo si se desea tachar en el carton 1, fila 1, columna 2 se deberá ingresar 112 y presionar enter.
-2. Para cantar línea o bingo se deberá ingresar la palabra “linea” seguida del numero de carton y el numero de fila
-   para cantar bingo, se debera ingresar la palabra “bingo” y presionar enter.
+2. Para cantar línea o bingo se deberá ingresar la palabra “linea” o “bingo” seguido del número de cartón
 3. Para ver los tableros de la maquina se debera ingresar la letra “m” y presionar enter.
 4. Para pasar a la siguiente tirada, se debera presionar la tecla “enter”.''')
 
@@ -281,7 +398,31 @@ CONTROLES:''')
     msvcrt.getch()
     cls()
 
-def menu_principal():
+
+def historial_de_partidas(partidas_jugadas:int, ganancias:dict):
+    cls()
+    time.sleep(1)
+    print('''
+HISTORIAL DE PARTIDAS:''')
+    time.sleep(2)
+    print(f'''
+Partidas jugadas: {partidas_jugadas}''')
+    time.sleep(2)
+    print('''
+Ganancias:''')
+for ente in ganancias:
+    print(f'''
+    {ente}: {ganancias[ente]}''')
+    time.sleep(2)
+    print("Presione cualquier tecla para continuar...")
+    msvcrt.getch()
+    cls()
+
+
+
+def menu_principal(partidas_jugadas: int):
+    ganancias: dict = {"jugador": 0, "maquina": 0}
+    partidas_jugadas: int = 0
     cerrar: bool = False
     while not cerrar:
         print('''
@@ -296,13 +437,14 @@ def menu_principal():
             opcion: str = input("Ingrese una opcion: ")
         opcion = int(opcion)
         if opcion == 1:
-            juego()
+            partidas_jugadas += 1
+            juego(ganancias)
         elif opcion == 2:
             tabla_de_premios()
         elif opcion == 3:
             como_funciona()
         elif opcion == 4:
-            pass
+            historial_de_partidas(partidas_jugadas, ganancias)
         elif opcion == 5:
             print("Gracias por jugar!")
             time.sleep(1)
