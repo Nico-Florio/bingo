@@ -8,6 +8,7 @@
 import os
 import random
 import msvcrt
+from socket import gaierror
 import time
 from colorama import *
 
@@ -410,9 +411,8 @@ Partidas jugadas: {partidas_jugadas}''')
     time.sleep(2)
     print('''
 Ganancias:''')
-for ente in ganancias:
     print(f'''
-    {ente}: {ganancias[ente]}''')
+    {ente}: {ganancias[ente]}''' for ente in ganancias)
     time.sleep(2)
     print("Presione cualquier tecla para continuar...")
     msvcrt.getch()
