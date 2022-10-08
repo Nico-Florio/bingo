@@ -8,7 +8,6 @@
 import os
 import random
 import msvcrt
-from socket import gaierror
 import time
 from colorama import *
 
@@ -171,19 +170,19 @@ def juego(ganancias:dict):
                         partida_terminada = True
                         return ganancias
 
-                comando: str = input("ingrese un comando: ")
+                comando: str = input("ingrese un comando: ").lower()
                 while comando != "":
                     if comando.isnumeric():
                         if len(comando) != 3:
                             print("Comando invalido")
-                            comando: str = input("ingrese un comando: ")
+                            comando: str = input("ingrese un comando: ").lower()
                         else:
                             carton: int = int(comando[0])
                             fila: int = int(comando[1])
                             columna: int = int(comando[2])
                             if carton > len(cartones_del_jugador) or carton < 1:
                                 print("Comando invalido")
-                                comando: str = input("ingrese un comando: ")
+                                comando: str = input("ingrese un comando: ").lower()
                             else:
                                 if cartones_del_jugador[carton-1][fila-1][columna-1] == tirada:
                                     cartones_del_jugador[carton-1][fila-1][columna-1] = "x"
@@ -192,7 +191,7 @@ def juego(ganancias:dict):
                                     comando = input("ingrese un comando: ")
                                 else:
                                     print("Comando invalido")
-                                    comando: str = input("ingrese un comando: ")
+                                    comando: str = input("ingrese un comando: ").lower()
                             
                     elif comando == "m":
                         cls()
@@ -206,7 +205,7 @@ def juego(ganancias:dict):
                             for j in range(9):
                                 print(cartones_de_la_maquina[i][j])
                         print(Style.RESET_ALL)
-                        comando: str = input("ingrese un comando: ")
+                        comando: str = input("ingrese un comando: ").lower()
                     elif comando == "j":
                         cls()
                         mensaje_de_ayuda(cartones_del_jugador)
@@ -220,21 +219,21 @@ def juego(ganancias:dict):
                             for j in range(9):
                                 print(cartones_del_jugador[i][j])
                         print(Style.RESET_ALL)
-                        comando: str = input("ingrese un comando: ")
+                        comando: str = input("ingrese un comando: ").lower()
                     elif comando.isalnum() and "linea" in comando:
                         if len(comando) == 6:
-                            carton: int = int(comando[6])
+                            carton: int = int(comando[5])
                             if carton > len(cartones_del_jugador) or carton < 1:
                                 print("Comando invalido")
-                                comando: str = input("ingrese un comando: ")
+                                comando: str = input("ingrese un comando: ").lower()
                             else:
                                 ganancias["jugador"] += 2000
                     elif comando.isalnum() and "bingo" in comando:
                         if len(comando) == 6:
-                            carton: int = int(comando[6])
+                            carton: int = int(comando[5])
                             if carton > len(cartones_del_jugador) or carton < 1:
                                 print("Comando invalido")
-                                comando: str = input("ingrese un comando: ")
+                                comando: str = input("ingrese un comando: ").lower()
                             else:
                                 cantidad_de_x_carton_jugador: int = 0
                                 for i in range(9):
@@ -262,6 +261,8 @@ def juego(ganancias:dict):
                 time.sleep(1)
                 print("SE TIRARA UNA MONEDA, BUENA SUERTE!")
                 time.sleep(1)
+                print("la moneda cayo en...")
+                time.sleep(3)
                 moneda: int = random.randint(1,2)
                 if moneda == 1:
                     moneda: str = "cara"
@@ -405,14 +406,13 @@ def historial_de_partidas(partidas_jugadas:int, ganancias:dict):
     time.sleep(1)
     print('''
 HISTORIAL DE PARTIDAS:''')
-    time.sleep(2)
+    time.sleep(1)
     print(f'''
 Partidas jugadas: {partidas_jugadas}''')
     time.sleep(2)
     print('''
 Ganancias:''')
-    print(f'''
-    {ente}: {ganancias[ente]}''' for ente in ganancias)
+    print(ganancias)
     time.sleep(2)
     print("Presione cualquier tecla para continuar...")
     msvcrt.getch()
@@ -420,12 +420,12 @@ Ganancias:''')
 
 
 
-def menu_principal(partidas_jugadas: int):
+def menu_principal():
     ganancias: dict = {"jugador": 0, "maquina": 0}
     partidas_jugadas: int = 0
     cerrar: bool = False
     while not cerrar:
-        print('''
+        print(Fore.LIGHTGREEN_EX + "BINGO" + Style.RESET_ALL+ '''
 [1] Jugar
 [2] Tabla de premios
 [3] Como Funciona
@@ -461,8 +461,6 @@ def main():
     print("cantalo...")
     time.sleep(1)
     print("cantalo...")
-    time.sleep(1)
-    print(Fore.LIGHTGREEN_EX + "BINGO!" + Style.RESET_ALL)
     time.sleep(1)
     menu_principal()
 
