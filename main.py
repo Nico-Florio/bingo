@@ -21,6 +21,15 @@ def cls():
 
 def generar_carton():
     carton = []
+    numeros_fila_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    numeros_fila_2 = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    numeros_fila_3 = [23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
+    numeros_fila_4 = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+    numeros_fila_5 = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55]
+    numeros_fila_6 = [56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]
+    numeros_fila_7 = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77]
+    numeros_fila_8 = [78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88]
+    numeros_fila_9 = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
     for i in range(9):
         carton.append([])
         for j in range(3):
@@ -28,23 +37,33 @@ def generar_carton():
     for i in range(9):
         for j in range(3):
             if i == 0:
-                carton[i][j] = random.randint(1, 11)
+                
+                carton[i][j] = random.choice(numeros_fila_1)
+                numeros_fila_1.remove(carton[i][j])
             elif i == 1:
-                carton[i][j] = random.randint(12, 22)
+                carton[i][j] = random.choice(numeros_fila_2)
+                numeros_fila_2.remove(carton[i][j])
             elif i == 2:
-                carton[i][j] = random.randint(23, 33)
+                carton[i][j] = random.choice(numeros_fila_3)
+                numeros_fila_3.remove(carton[i][j])
             elif i == 3:
-                carton[i][j] = random.randint(34, 44)
+                carton[i][j] = random.choice(numeros_fila_4)
+                numeros_fila_4.remove(carton[i][j]) 
             elif i == 4:
-                carton[i][j] = random.randint(45, 55)
+                carton[i][j] = random.choice(numeros_fila_5)
+                numeros_fila_5.remove(carton[i][j])
             elif i == 5:
-                carton[i][j] = random.randint(56, 66)
+                carton[i][j] = random.choice(numeros_fila_6)
+                numeros_fila_6.remove(carton[i][j])
             elif i == 6:
-                carton[i][j] = random.randint(67, 77)
+                carton[i][j] = random.choice(numeros_fila_7)
+                numeros_fila_7.remove(carton[i][j])
             elif i == 7:
-                carton[i][j] = random.randint(78, 88)
+                carton[i][j] = random.choice(numeros_fila_8)
+                numeros_fila_8.remove(carton[i][j])
             elif i == 8:
-                carton[i][j] = random.randint(89, 99)
+                carton[i][j] = random.choice(numeros_fila_9)
+                numeros_fila_9.remove(carton[i][j])
     return carton
 
 
@@ -70,31 +89,61 @@ def juego():
         cantidad_de_cartones: str = input(f"{nombre_de_jugador}, ingrese la cantidad de cartones(min 1, max 5) que quiere adquuirir: ")
         cartones_del_jugador = []
         cartones_de_la_maquina = []
-        for i in range(int(cantidad_de_cartones)):
+        if not cantidad_de_cartones.isdigit():
+            print("Cantidad invalida")
+            cantidad_de_cartones: str = input(f"{nombre_de_jugador}, ingrese la cantidad de cartones(min 1, max 5) que quiere adquuirir: ")
+        if int(cantidad_de_cartones) < 1 or int(cantidad_de_cartones) > 5:
+            print("Cantidad invalida")
+            cantidad_de_cartones: str = input(f"{nombre_de_jugador}, ingrese la cantidad de cartones(min 1, max 5) que quiere adquuirir: ")
+        cantidad_de_cartones = int(cantidad_de_cartones)
+        print()
+        for i in range(cantidad_de_cartones):
             cartones_del_jugador.append(generar_carton())
-        for i in range(10 - int(cantidad_de_cartones)):
+        cantidad_de_cartones_maquina: int = 10 - cantidad_de_cartones
+        for i in range(cantidad_de_cartones_maquina):
             cartones_de_la_maquina.append(generar_carton())
+        print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
         for i in range(len(cartones_del_jugador)):
-            print()
             print()
             print(f"Carton {i+1}:")
             print()
             for j in range(9):
                 print(cartones_del_jugador[i][j])
-        comenzar: str = input("Presione cualquier tecla para comenzar a jugar: ")
+        print(Style.RESET_ALL)
+        print()
+        print(Fore.BLUE + "CARTONES DE LA MAQUINA")
+        for i in range(len(cartones_de_la_maquina)):
+            print()
+            print(f"Carton {i+1}:")
+            print()
+            for j in range(9):
+                print(cartones_de_la_maquina[i][j])
+        print(Style.RESET_ALL)
+        print("Presione cualquier tecla para comenzar a jugar: ")
         msvcrt.getch()
         cls()
         time.sleep(1)
         print("Comienza el juego!")
         time.sleep(3)
         cls()
-        print(Fore.BLUE + '''
-        COMANDOS: 
-        coordenadas x,y para marcar, 
-        m para ver tableros de la maquina, j para ver tableros del jugador,"
-        "bingo o linea para cantar bingo o linea, 
-        enter para continuar''' + Style.RESET_ALL)
-
+        if len(cartones_del_jugador) == 1:
+            print(Fore.GREEN + '''
+COMANDOS: 
+ingrese 1, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 153) 
+m para ver tableros de la maquina, j para ver tableros del jugador,"
+linea + carton y fila para cantar linea,
+bingo para cantar bingo,
+enter para continuar''' + Style.RESET_ALL)
+            print()
+        else:
+            print(Fore.GREEN + f'''
+COMANDOS:
+ingrese un numero del 1 al {len(cartones_del_jugador)}, seguido del numero de fila y de la columna para marcar el carton (ejemplo: 392)
+m para ver tableros de la maquina, j para ver tableros del jugador,"
+linea + carton y fila para cantar linea,
+bingo para cantar bingo,
+enter para continuar''' + Style.RESET_ALL)
+            print()
         print(f"RONDA {ronda}")
         time.sleep(1)
         tirada: int = jugada(bolillero)
@@ -107,22 +156,36 @@ def juego():
         comando: str = input("ingrese un comando: ")
         while comando != "":
             if comando.isnumeric():
-                coordenadas = comando.split(",")
-                x = int(coordenadas[0])
-                y = int(coordenadas[1])
-                if cartones_del_jugador[x][y] == tirada:
-                    cartones_del_jugador[x][y] = "x"
-                comando: str = input("ingrese un comando: ")
+                if len(comando) != 3:
+                    print("Comando invalido")
+                    comando: str = input("ingrese un comando: ")
+                else:
+                    carton: int = int(comando[0])
+                    fila: int = int(comando[1])
+                    columna: int = int(comando[2])
+                    if carton > len(cartones_del_jugador) or carton < 1:
+                        print("Comando invalido")
+                        comando: str = input("ingrese un comando: ")
+                    else:
+                        if cartones_del_jugador[carton-1][fila-1][columna-1] == tirada:
+                            cartones_del_jugador[carton-1][fila-1][columna-1] = "x"
+                            comando = input("ingrese un comando: ")
+                        else:
+                            print("Comando invalido")
+                            comando: str = input("ingrese un comando: ")
+                    
             elif comando == "m":
+                print(Fore.BLUE + "CARTONES DE LA MAQUINA")
                 for i in range(len(cartones_de_la_maquina)):
-                    print()
                     print()
                     print(f"Carton {i+1}:")
                     print()
                     for j in range(9):
                         print(cartones_de_la_maquina[i][j])
-                        comando: str = input("ingrese un comando: ")
+                print(Style.RESET_ALL)
+                comando: str = input("ingrese un comando: ")
             elif comando == "j":
+                print(Fore.RED + f"Cartones de {nombre_de_jugador}:")
                 for i in range(len(cartones_del_jugador)):
                     print()
                     print()
@@ -130,6 +193,7 @@ def juego():
                     print()
                     for j in range(9):
                         print(cartones_del_jugador[i][j])
+                print(Style.RESET_ALL)
                 comando: str = input("ingrese un comando: ")
             elif comando == "bingo":
                 pass
@@ -148,7 +212,7 @@ PREMIOS:
 Linea: 2000 pesos
 Bingo: 58000 pesos''')
     time.sleep(2)
-    continuar = input("Presione cualquier tecla para continuar...")
+    print("Presione cualquier tecla para continuar...")
     msvcrt.getch()
     cls()
 
@@ -206,13 +270,14 @@ CONTROLES:''')
     time.sleep(2)
     print('''
 1. Para tachar una celda se deberá ingresar el número de la celda que se desea tachar,
-   por ejemplo si se desea tachar la celda 1,2 se deberá ingresar 12 y presionar enter.
-2. Para cantar línea o bingo se deberá ingresar la palabra “linea” o “bingo” y presionar enter.
+   por ejemplo si se desea tachar en el carton 1, fila 1, columna 2 se deberá ingresar 112 y presionar enter.
+2. Para cantar línea o bingo se deberá ingresar la palabra “linea” seguida del numero de carton y el numero de fila
+   para cantar bingo, se debera ingresar la palabra “bingo” y presionar enter.
 3. Para ver los tableros de la maquina se debera ingresar la letra “m” y presionar enter.
 4. Para pasar a la siguiente tirada, se debera presionar la tecla “enter”.''')
 
     print()
-    continuar = input("Presione cualquier tecla para continuar...")
+    print("Presione cualquier tecla para continuar...")
     msvcrt.getch()
     cls()
 
@@ -255,7 +320,7 @@ def main():
     time.sleep(1)
     print("cantalo...")
     time.sleep(1)
-    print("BINGO!")
+    print(Fore.LIGHTGREEN_EX + "BINGO!" + Style.RESET_ALL)
     time.sleep(1)
     menu_principal()
 
