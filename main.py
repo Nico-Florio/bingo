@@ -7,8 +7,7 @@
 
 import os # para poder limpiar la pantalla
 import random # para los tableros y las bolillas
-import msvcrt
-from re import L # para poder usar la funcion getch()
+import msvcrt # para poder usar la funcion getch() en windows
 import time # para poder usar la funcion sleep()
 from colorama import * # para poder usar colores en la consola
 
@@ -235,6 +234,7 @@ def comando(nombre_de_jugador: str, rondas:int, tirada: int, cartones_del_jugado
     if comando == "":
         rondas += 1
         return rondas
+    
 
 
 # Funcion que se encarga de modificar los cartones si la ronda es multiplo de 4
@@ -292,7 +292,6 @@ def ronda_tweak(nombre_de_jugador: str, rondas: int, cartones_del_jugador: dict)
 # PRE: recibe el diccionario con las ganancias de cada jugador
 # POST: devuelve el diccionario con las ganancias de cada jugador actualizado
 def juego(ganancias:dict):
-        ganancias: dict = {'jugador': 0, 'maquina': 0}	
         cls()
         rondas: int = 1
         bolillero = generar_bolillero()
@@ -334,7 +333,7 @@ def juego(ganancias:dict):
                     time.sleep(1)
                 bingo_de_la_maquina: bool = validar_bingo(cartones_de_la_maquina)
                 if bingo_de_la_maquina:
-                    ganancias['maquina'] += 10000
+                    ganancias['maquina'] += 58000
                     print(Fore.BLUE + "La maquina cantó bingo!" + Style.RESET_ALL)
                     time.sleep(1)
                     partida_terminada = True
