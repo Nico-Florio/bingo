@@ -68,6 +68,9 @@ def generar_carton():
     return carton
 
 
+# Funcion que modifica las ganancias del jugador
+# PRE: recibe el diccionario de ganancias y el comando ingresado por el usuario
+# POST: modifica el diccionario de ganancias
 def modificar_ganancias(ganancias:dict, comando:str) -> dict:
     if "bingo" in comando:
         ganancias["jugador"] += 58000
@@ -254,7 +257,7 @@ def comando(nombre_de_jugador: str, rondas:int, tirada: int, cartones_del_jugado
 
 
 # Funcion que se encarga de modificar los cartones si la ronda es multiplo de 4
-# PRE: recibe el nombre, el numero de rondas y los cartones del jugador.
+# PRE: recibe el nombre, el numero de rondas ,los cartones del jugador y las bolillas que ya salieron.
 # POST: la funcion modifica los cartones dependiendo de como caiga la moneda y devuelve las rondas modificadas
 def ronda_tweak(nombre_de_jugador: str, rondas: int, cartones_del_jugador: dict, bolillas: list):
     moneda: int = random.randint(1, 2)
@@ -311,7 +314,7 @@ def ronda_tweak(nombre_de_jugador: str, rondas: int, cartones_del_jugador: dict,
         
 
 # Funcion que ejecuta el juego
-# PRE: recibe el diccionario con las ganancias de cada jugador
+# PRE: recibe el diccionario con las ganancias de cada jugador, el numero de partida y el diccionario de partidas
 # POST: devuelve el diccionario con las ganancias de cada jugador actualizado
 def juego(ganancias:dict, partida: int, partidas:dict ) -> dict:
         cls()
@@ -469,7 +472,7 @@ CONTROLES:''')
 
 
 # Funcion que imprime en pantalla el historial de partidas
-# PRE: Recibe la cantidad de partidas jugadas(entero) y el diccionario de ganancias,
+# PRE: Recibe la cantidad de partidas jugadas(entero) y el diccionario de partidas
 # POST: Imprime la cantidad de partidas jugadas y las ganancias de cada jugador
 def historial_de_partidas(partidas_jugadas:int, partidas:dict):
     cls()
