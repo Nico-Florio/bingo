@@ -83,8 +83,9 @@ def modificar_ganancias(ganancias:dict, comando:str) -> dict:
 # POST: devuelve una impresion en pantalla de los cartones ingresados.
 def mostrar_carton(cartones: dict):
     for i in range(len(cartones)):
+        print(f"Carton {i+1}")
         for fila in cartones[i]:
-            print(Fore.WHITE + "----------------------------------------------")
+            print("----------------------------------------------")
             print("|", end=" ")
             for columna in fila:
                 print(f"{columna}", end=" | ")
@@ -155,6 +156,8 @@ def validar_linea(cartones: dict):
         for j in range(3):
             if cartones[i][0].count("x") == 5 or cartones[i][1].count("x") == 5 or cartones[i][2].count("x") == 5:
                 return True
+            else:
+                return False
 
 
 # Funcion que verifica si la maquina tiene bingo
@@ -164,6 +167,8 @@ def validar_bingo(cartones: dict):
     for i in range(len(cartones)):
         if cartones[i][0].count("x") == 5 and cartones[i][1].count("x") == 5 and cartones[i][2].count("x") == 5:
             return True
+        else:
+            return False
 
 
 # Funcion que se encarga de marcar el carton del jugador si la ronda no es multiplo de 4
@@ -219,6 +224,9 @@ def comando(nombre_de_jugador: str, rondas:int, tirada: int, cartones_del_jugado
                         if cartones_del_jugador[carton-1][i].count("x") == 5:
                             modificar_ganancias(ganancias, comando)
                             print(f"{nombre_de_jugador} cantó Linea!")
+                        else:
+                            print("No hay linea")
+                            comando: str = input("ingrese un comando: ").lower()
             else:
                 print("Comando invalido")
                 comando: str = input("ingrese un comando: ").lower()
